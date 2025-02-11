@@ -14,7 +14,7 @@ const TicketType = ({
   onClick,
 }: TicketTypeProps) => {
   return (
-    <div
+    <button
       className={`flex gap-3 p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
         isSelected
           ? "bg-[#197686] border-[#197686]"
@@ -33,7 +33,7 @@ const TicketType = ({
       <span className="flex p-2 self-start h-fit min-w-20 rounded-lg border border-[#2BA4B9] bg-[#0E464F] text-[20px] font-semibold leading-[22px] justify-end">
         {price}
       </span>
-    </div>
+    </button>
   );
 };
 

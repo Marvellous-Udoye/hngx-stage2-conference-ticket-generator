@@ -114,7 +114,7 @@ export default function Home() {
 
           <div className="bg-[#041E23] border border-[#0E464F] flex gap-8 md:px-12 justify-between rounded-3xl">
             <button
-              onClick={() => router.refresh()}
+              onClick={window.location.reload}
               className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
             >
               Cancel

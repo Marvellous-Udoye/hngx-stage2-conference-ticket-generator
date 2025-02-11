@@ -1,9 +1,8 @@
 "use client";
 
-import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import CloudDownloadIcon from "../../../public/images/cloud-download.svg";
 import EnvelopeIcon from "../../../public/images/envelope.svg";
 
@@ -14,12 +13,17 @@ interface FormProps {
   avatar: string;
 }
 
+// Move these to environment variables
+const CLOUDINARY_UPLOAD_PRESET =
+  process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export default function Details() {
   const router = useRouter();
   const [errors, setErrors] = useState<Partial<FormProps>>({});
-  const [isOpen, setIsOpen] = useState(false);
-  const [tempUrl, setTempUrl] = useState("");
-  const [isValidImage, setIsValidImage] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const [state, setState] = useState<FormProps>({
     name: "",
     email: "",
@@ -29,15 +33,27 @@ export default function Details() {
 
   // Load saved state from localStorage
   useEffect(() => {
-    const savedState = localStorage.getItem("formState");
-    if (savedState) {
-      setState(JSON.parse(savedState));
+    try {
+      const savedState = localStorage.getItem("formState");
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        setState(parsedState);
+        if (parsedState.avatar) {
+          setPreviewUrl(parsedState.avatar);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading saved state:", error);
     }
   }, []);
 
   // Save state to localStorage
   useEffect(() => {
-    localStorage.setItem("formState", JSON.stringify(state));
+    try {
+      localStorage.setItem("formState", JSON.stringify(state));
+    } catch (error) {
+      console.error("Error saving state:", error);
+    }
   }, [state]);
 
   // Clear errors after 3 seconds
@@ -59,7 +75,7 @@ export default function Details() {
 
     if (!state.email) {
       newErrors.email = "Email address is required";
-    } else if (!/\S+@\S+\.\S+/.test(state.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
       newErrors.email = "Invalid email format";
     }
 
@@ -69,26 +85,82 @@ export default function Details() {
 
     if (!state.avatar) {
       newErrors.avatar = "Profile photo is required";
-    } else if (!state.avatar.startsWith("http")) {
-      newErrors.avatar =
-        "Please enter a valid image URL (must start with http:// or https://)";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageError = () => {
-    setIsValidImage(false);
-    setErrors((prev) => ({
-      ...prev,
-      avatar: "Failed to load image. Please check the URL.",
-    }));
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    if (!CLOUDINARY_UPLOAD_PRESET || !CLOUDINARY_CLOUD_NAME) {
+      throw new Error("Cloudinary configuration is missing");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Upload failed");
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Upload error:", error);
+      throw error;
+    }
   };
 
-  const handleImageLoad = () => {
-    setIsValidImage(true);
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset previous errors
     setErrors((prev) => ({ ...prev, avatar: undefined }));
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setErrors((prev) => ({ ...prev, avatar: "Please upload an image file" }));
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      setErrors((prev) => ({
+        ...prev,
+        avatar: "File size should be less than 10MB",
+      }));
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+
+      // Create preview immediately
+      const localPreviewUrl = URL.createObjectURL(file);
+      setPreviewUrl(localPreviewUrl);
+
+      // Upload to Cloudinary
+      const cloudinaryUrl = await uploadToCloudinary(file);
+      setState((prev) => ({ ...prev, avatar: cloudinaryUrl }));
+    } catch {
+      setErrors((prev) => ({ ...prev, avatar: "Failed to upload image" }));
+      setPreviewUrl("");
+      setState((prev) => ({ ...prev, avatar: "" }));
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleChange = (
@@ -99,40 +171,21 @@ export default function Details() {
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      router.push("/");
+      try {
+        // Clear localStorage after successful submission
+        localStorage.removeItem("formState");
+        router.push("/");
+      } catch (error) {
+        console.error("Navigation error:", error);
+        setErrors((prev) => ({
+          ...prev,
+          submit: "Failed to submit form. Please try again.",
+        }));
+      }
     }
-  };
-
-  const handleAvatarSubmit = () => {
-    if (!tempUrl) {
-      setErrors((prev) => ({
-        ...prev,
-        avatar: "Please enter an image URL",
-      }));
-      return;
-    }
-
-    if (!tempUrl.startsWith("http://") && !tempUrl.startsWith("https://")) {
-      setErrors((prev) => ({
-        ...prev,
-        avatar:
-          "Please enter a valid image URL (must start with http:// or https://)",
-      }));
-      return;
-    }
-
-    if (isValidImage) {
-      setState((prev) => ({ ...prev, avatar: tempUrl }));
-      setIsOpen(false);
-    }
-  };
-
-  const openAvatarDialog = () => {
-    setTempUrl(state.avatar);
-    setIsOpen(true);
   };
 
   return (
@@ -141,59 +194,74 @@ export default function Details() {
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
             <h1 className="text-[32px] font-normal text-white jeju">
-              Attendee Details{" "}
+              Attendee Details
             </h1>
             <p className="text-base font-normal leading-6 text-foreground font-roboto">
               Step 2/3
             </p>
           </div>
-
           <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
             <div className="w-3/4 h-1 rounded-[5px] bg-[#24A0B5]"></div>
           </div>
         </div>
 
         <div className="flex flex-col space-y-8 p-6 rounded-[32px] bg-[#08252B] border border-[#0E464F]">
-          <div
-            onClick={openAvatarDialog}
-            className="flex flex-col gap-8 p-6 rounded-2xl border border-[#07373F] bg-[#052228] cursor-pointer"
-          >
+          <div className="flex flex-col gap-8 p-6 rounded-2xl border border-[#07373F] bg-[#052228]">
             <label
-              htmlFor="avatar"
+              htmlFor="fileInput"
               className="font-roboto text-base font-normal leading-6 text-foreground"
             >
               Upload Profile Photo
             </label>
-            <div className="flex items-center justify-center bg-black/20">
-              {state.avatar ? (
-                <div className="relative w-full h-[240px] rounded-[32px] overflow-hidden">
-                  <Image
-                    src={state.avatar}
-                    alt="Profile Preview"
-                    fill
-                    style={{ objectFit: "cover" }}
-                    onError={handleImageError}
-                    onLoad={handleImageLoad}
-                  />
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center p-6 gap-4 rounded-[32px] bg-[#0E464F] text-foreground min-h-[240px]">
-                  <Image
-                    width={32}
-                    height={32}
-                    src={CloudDownloadIcon}
-                    alt="Cloud Icon"
-                    aria-label="Logo of a Cloud"
-                    className="w-8 h-8 border-[#0E464F]"
-                  />
-                  <p className="max-w-[192px] text-center text-foreground text-base font-normal leading-6 font-roboto">
-                    Drag & drop or click to upload
-                  </p>
-                </div>
-              )}
+            <div className="relative w-full bg-black/20">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="fileInput"
+                disabled={isUploading}
+                aria-describedby="avatar-error"
+                aria-label="Upload Profile Photo"
+                data-testid="file-input"
+              />
+              <label
+                htmlFor="fileInput"
+                className={`cursor-pointer block mx-auto max-w-[240px] ${
+                  isUploading ? "opacity-50" : ""
+                }`}
+              >
+                {previewUrl ? (
+                  <div className="relative h-[240px] rounded-[32px] overflow-hidden">
+                    <Image
+                      src={previewUrl}
+                      alt="Profile Preview"
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-6 gap-4 rounded-[32px] bg-[#0E464F] text-foreground min-h-[240px]">
+                    <Image
+                      width={32}
+                      height={32}
+                      src={CloudDownloadIcon}
+                      alt="Upload Icon"
+                      className="w-8 h-8"
+                    />
+                    <p className="max-w-[192px] text-center text-foreground text-base font-normal leading-6 font-roboto">
+                      {isUploading ? "Uploading..." : "Click to upload image"}
+                    </p>
+                  </div>
+                )}
+              </label>
             </div>
             {errors.avatar && (
-              <span className="text-sm text-red-600 tracking-wide">
+              <span
+                id="avatar-error"
+                className="text-sm text-red-600 tracking-wide"
+                role="alert"
+              >
                 {errors.avatar}
               </span>
             )}
@@ -207,7 +275,7 @@ export default function Details() {
                 htmlFor="name"
                 className="font-roboto text-base font-normal leading-6 text-foreground"
               >
-                Enter your name
+                Enter your name *
               </label>
               <input
                 type="text"
@@ -216,16 +284,17 @@ export default function Details() {
                 value={state.name}
                 onChange={handleChange}
                 className="w-full bg-transparent p-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
-                placeholder=""
+                placeholder="Your full name"
                 aria-required="true"
                 aria-invalid={!!errors.name}
                 aria-describedby="name-error"
-                aria-label="Name"
+                data-testid="name-input"
               />
               {errors.name && (
                 <span
                   id="name-error"
                   className="text-sm text-red-600 tracking-wide"
+                  role="alert"
                 >
                   {errors.name}
                 </span>
@@ -245,7 +314,7 @@ export default function Details() {
                   height={24}
                   src={EnvelopeIcon}
                   alt="Email Icon"
-                  className="absolute top-3 left-3 w-6 h-6 border-[#0E464F]"
+                  className="absolute top-3 left-3 w-6 h-6"
                 />
                 <input
                   type="email"
@@ -253,18 +322,19 @@ export default function Details() {
                   name="email"
                   value={state.email}
                   onChange={handleChange}
-                  placeholder="hello@avioflagos.io"
+                  placeholder="hello@example.com"
                   className="w-full bg-transparent py-3 pl-11 pr-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
                   aria-required="true"
                   aria-invalid={!!errors.email}
                   aria-describedby="email-error"
-                  aria-label="Email"
+                  data-testid="email-input"
                 />
               </div>
               {errors.email && (
                 <span
                   id="email-error"
                   className="text-sm text-red-600 tracking-wide"
+                  role="alert"
                 >
                   {errors.email}
                 </span>
@@ -289,11 +359,13 @@ export default function Details() {
                 aria-invalid={!!errors.about}
                 aria-describedby="about-error"
                 aria-label="About the project"
+                data-testid="about-textarea"
               ></textarea>
               {errors.about && (
                 <span
                   id="about-error"
                   className="text-sm text-red-600 tracking-wide"
+                  role="alert"
                 >
                   {errors.about}
                 </span>
@@ -305,12 +377,14 @@ export default function Details() {
                 type="button"
                 onClick={() => router.push("/")}
                 className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
+                data-testid="back-button"
               >
                 Back
               </button>
               <button
                 type="submit"
                 className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
+                data-testid="submit-button"
               >
                 Get My Free Ticket
               </button>
@@ -318,95 +392,6 @@ export default function Details() {
           </form>
         </div>
       </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-50"
-          onClose={() => setIsOpen(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-[#041E23] border border-[#0E464F] p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-white mb-4"
-                  >
-                    Enter Image URL
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <input
-                      type="url"
-                      value={tempUrl}
-                      onChange={(e) => setTempUrl(e.target.value)}
-                      className="w-full bg-transparent p-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                    {!isValidImage && (
-                      <p className="text-red-500 text-sm mt-2">
-                        Please enter a valid image URL
-                      </p>
-                    )}
-                  </div>
-
-                  {tempUrl && (
-                    <div className="mt-4">
-                      <Image
-                        src={tempUrl}
-                        alt="Preview"
-                        width={200}
-                        height={200}
-                        className="rounded-lg mx-auto"
-                        onError={handleImageError}
-                        onLoad={handleImageLoad}
-                      />
-                    </div>
-                  )}
-
-                  <div className="mt-4 flex gap-4">
-                    <button
-                      type="button"
-                      className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
-                      onClick={handleAvatarSubmit}
-                      disabled={!isValidImage || !tempUrl}
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
     </main>
   );
 }
