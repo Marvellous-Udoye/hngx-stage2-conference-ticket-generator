@@ -1,21 +1,30 @@
+@import url('https://db.onlinewebfonts.com/c/1a5c2d8bbd4e28d99a6efcbb9a5b378f?family=JejuMyeongjo');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #FAFAFA;
+  --background: radial-gradient(52.52% 32.71% at 50% 97.66%, rgba(36, 160, 181, 0.20) 0%, rgba(36, 160, 181, 0.00) 100%), #02191D;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  height: 100%;
+  background: var(--background);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh; 
+  background-size: cover; 
+}
+
+.jeju {
+  font-family: "JejuMyeongjo";
+}
+
+.radial-gradient {
+  background: radial-gradient(57.42% 106.59% at 14.02% 32.06%, rgba(36, 160, 181, 0.20) 0%, rgba(36, 160, 181, 0.00) 100%), rgba(10, 12, 17, 0.10);
 }

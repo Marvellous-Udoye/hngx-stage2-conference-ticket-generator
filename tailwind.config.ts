@@ -12,6 +12,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        roboto: 'var(--font-roboto)',
+        roadRage: 'var(--font-road-rage)',
+      }
     },
   },
   plugins: [],
