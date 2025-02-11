@@ -1,6 +1,6 @@
 import Navbar from "@/components/layouts/Navbar";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Road_Rage, Roboto } from "next/font/google";
+import { Geist, Geist_Mono, Road_Rage, Roboto, Alatsi } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,6 +25,12 @@ const roadRage = Road_Rage({
   subsets: ["latin"],
 });
 
+const alatsi = Alatsi({
+  variable: "--font-alatsi",
+  weight: ["400"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Conference Ticket Generator",
   description: "Fill the form and get a ticket",
@@ -38,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${roadRage.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${roadRage.variable} ${alatsi.variable} antialiased`}
       >
         <Navbar />
         {children}

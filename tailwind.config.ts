@@ -15,6 +15,7 @@ export default {
       fontFamily: {
         roboto: 'var(--font-roboto)',
         roadRage: 'var(--font-road-rage)',
+        alatsi: 'var(--font-alatsi)',
       }
     },
   },
