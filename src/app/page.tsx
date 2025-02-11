@@ -2,10 +2,12 @@
 
 import { ticketTypesData } from "@/components/Tickets/Tickets";
 import TicketType from "@/components/Tickets/TicketType";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Home() {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
+  const router = useRouter();
 
   return (
     <main className="max-xl:px-5 pb-12 md:pb-24 ">
@@ -20,7 +22,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="h-1 w-full rounded-[5px] bg-[#24A0B5]"></div>
+          <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
+            <div className="w-1/2 h-1 rounded-[5px] bg-[#24A0B5]"></div>
+          </div>
         </div>
 
         <div className="flex flex-col space-y-8 p-6 rounded-[32px] bg-[#08252B] border border-[#0E464F]">
@@ -109,10 +113,16 @@ export default function Home() {
           </div>
 
           <div className="bg-[#041E23] border border-[#0E464F] flex gap-8 md:px-12 justify-between rounded-3xl">
-            <button className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju">
+            <button
+              onClick={() => router.refresh()}
+              className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
+            >
               Cancel
             </button>
-            <button className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju">
+            <button
+              onClick={() => router.push("/details")}
+              className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
+            >
               Next
             </button>
           </div>
