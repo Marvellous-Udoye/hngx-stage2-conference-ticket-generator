@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import CloudDownloadIcon from "../../../public/images/cloud-download.svg";
 import EnvelopeIcon from "../../../public/images/envelope.svg";
-
-interface FormProps {
-  name: string;
-  email: string;
-  request: string;
-  avatar: string;
-}
+import { useFormContext } from "../../components/Context/FormContext";
 
 const CLOUDINARY_UPLOAD_PRESET =
   process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -20,23 +14,18 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function Details() {
   const router = useRouter();
-  const [errors, setErrors] = useState<Partial<FormProps>>({});
+  const { formData, setFormData } = useFormContext();
+  const [errors, setErrors] = useState<Partial<typeof formData>>({});
   const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string>(formData.avatar);
   const [file, setFile] = useState<File | null>(null);
-  const [state, setState] = useState<FormProps>({
-    name: "",
-    email: "",
-    request: "",
-    avatar: "",
-  });
 
   useEffect(() => {
     try {
       const savedState = localStorage.getItem("formState");
       if (savedState) {
         const parsedState = JSON.parse(savedState);
-        setState(parsedState);
+        setFormData(parsedState);
         if (parsedState.avatar) {
           setPreviewUrl(parsedState.avatar);
         }
@@ -44,30 +33,30 @@ export default function Details() {
     } catch (error) {
       console.error("Error loading saved state:", error);
     }
-  }, []);
+  }, [setFormData]);
 
   useEffect(() => {
     try {
-      localStorage.setItem("formState", JSON.stringify(state));
+      localStorage.setItem("formState", JSON.stringify(formData));
     } catch (error) {
       console.error("Error saving state:", error);
     }
-  }, [state]);
+  }, [formData]);
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormProps> = {};
+    const newErrors: Partial<typeof formData> = {};
 
-    if (!state.name.trim()) {
+    if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
 
-    if (!state.email) {
+    if (!formData.email) {
       newErrors.email = "Email address is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    if (!state.request.trim()) {
+    if (!formData.request.trim()) {
       newErrors.request = "Specific request is required";
     }
 
@@ -144,7 +133,7 @@ export default function Details() {
         if (file) {
           setIsUploading(true);
           const cloudinaryUrl = await uploadToCloudinary(file);
-          setState((prev) => ({ ...prev, avatar: cloudinaryUrl }));
+          setFormData((prev) => ({ ...prev, avatar: cloudinaryUrl }));
           setPreviewUrl(cloudinaryUrl);
         }
 
@@ -166,7 +155,7 @@ export default function Details() {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setState((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
@@ -273,7 +262,7 @@ export default function Details() {
                 type="text"
                 id="name"
                 name="name"
-                value={state.name}
+                value={formData.name}
                 onChange={handleChange}
                 className="w-full bg-transparent p-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
                 placeholder=""
@@ -310,7 +299,7 @@ export default function Details() {
                   type="email"
                   id="email"
                   name="email"
-                  value={state.email}
+                  value={formData.email}
                   onChange={handleChange}
                   placeholder="hello@avioflagos.io"
                   className="w-full bg-transparent py-3 pl-11 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-white"
@@ -339,7 +328,7 @@ export default function Details() {
               <textarea
                 id="request"
                 name="request"
-                value={state.request}
+                value={formData.request}
                 onChange={handleChange}
                 placeholder="Textarea"
                 className="bg-transparent p-3 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground min-h-[127px]"

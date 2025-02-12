@@ -1,6 +1,8 @@
+import { FormProvider } from "@/components/Context/FormContext";
+import { TicketProvider } from "@/components/Context/TicketContext";
 import Navbar from "@/components/layouts/Navbar";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Road_Rage, Roboto, Alatsi } from "next/font/google";
+import { Alatsi, Geist, Geist_Mono, Road_Rage, Roboto } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,8 +48,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${roadRage.variable} ${alatsi.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        <TicketProvider>
+          <FormProvider>
+            <Navbar />
+            {children}
+          </FormProvider>
+        </TicketProvider>
       </body>
     </html>
   );

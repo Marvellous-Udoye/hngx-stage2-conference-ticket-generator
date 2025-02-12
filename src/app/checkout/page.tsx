@@ -1,12 +1,45 @@
 "use client";
 
+import { ticketTypesData } from "@/components/Tickets/Tickets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import TicketBg from "../../../public/images/TICKET.png";
 import Barcode from "../../../public/images/barcode.jpg";
+import { useFormContext } from "../../components/Context/FormContext";
+import { useTicketContext } from "../../components/Context/TicketContext";
 
 export default function Checkout() {
   const router = useRouter();
+  const { formData } = useFormContext();
+  const { ticketData } = useTicketContext();
+  const [storedFormData, setStoredFormData] = useState(formData);
+  const [storedTicketData, setStoredTicketData] = useState(ticketData);
+
+  useEffect(() => {
+    const savedFormData = localStorage.getItem("formData");
+    const savedTicketData = localStorage.getItem("ticketData");
+
+    if (savedFormData) {
+      setStoredFormData(JSON.parse(savedFormData));
+    }
+    if (savedTicketData) {
+      setStoredTicketData(JSON.parse(savedTicketData));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+    localStorage.setItem("ticketData", JSON.stringify(ticketData));
+  }, [formData, ticketData]);
+
+  const isDataComplete =
+    storedFormData.name &&
+    storedFormData.email &&
+    storedFormData.request &&
+    storedFormData.avatar &&
+    storedTicketData.selectedTypeIndex !== undefined &&
+    storedTicketData.selectedTicketNumber !== undefined;
 
   return (
     <main className="max-xl:px-5 pb-12 md:pb-28" role="main">
@@ -29,115 +62,135 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="py-8 flex flex-col gap-4 text-center">
-          <h1
-            className="text-white font-normal text-[32px] font-alatsi"
-            aria-label="Ticket Booking Confirmation"
-          >
-            Your Ticket is Booked!
-          </h1>
-          <p className="text-base font-normal leading-6 text-foreground font-roboto">
-            Check your email for a copy or you can <strong>download</strong>
-          </p>
-        </div>
+        {isDataComplete ? (
+          <div className="pt-8 flex flex-col gap-4">
+            <h1
+              className="text-white font-normal text-[32px] font-alatsi text-center"
+              aria-label="Ticket Booking Confirmation"
+            >
+              Your Ticket is Booked!
+            </h1>
+            <p className="text-base font-normal leading-6 text-foreground font-roboto text-center">
+              Check your email for a copy or you can <strong>download</strong>
+            </p>
 
-        <div className="py-8 px-[21px] flex items-center justify-center">
-          <div className="relative" aria-labelledby="ticket-image">
-            <Image
-              width={300}
-              height={600}
-              src={TicketBg}
-              alt="Ticket Image"
-              className="relative w-[300px] h-[600px]"
-              priority
-            />
-
-            <div className="absolute max-w-[260px] max-h-[446px] flex flex-col gap-5 p-[14px] rounded-[16px] border border-[#24A0B5] bg-[rgba(3,30,33,0.10)] backdrop-blur-[2px] m-auto top-5 left-5">
-              <div className="flex flex-col text-center">
-                <h1
-                  className="text-[34px] font-normal leading-[34px] font-roadRage text-white"
-                  id="ticket-image"
-                >
-                  Techember Fest ”25
-                </h1>
-                <div className="p-1 flex flex-col gap-1 max-w-[175px] w-full mx-auto text-[10px] font-roboto font-normal leading-[15px] text-white">
-                  <p>📍 04 Rumens road, Ikoyi, Lagos</p>
-                  <p>📅 March 15, 2025 | 7:00 PM</p>
-                </div>
-              </div>
-
-              <div className="flex self-center">
+            <div className="py-8 px-[21px] flex items-center justify-center">
+              <div className="relative" aria-labelledby="ticket-image">
                 <Image
-                  src={""}
-                  width={140}
-                  height={140}
-                  alt="Profile Preview"
-                  style={{ objectFit: "cover" }}
-                  className="w-[140px] h-[140px] rounded-xl border-4 border-[#24A0B5]/50"
+                  width={300}
+                  height={600}
+                  src={TicketBg}
+                  alt="Ticket Image"
+                  className="w-[300px] h-[600px]"
+                  priority
                 />
+
+                <div className="absolute max-w-[260px] w-full max-h-[446px] flex flex-col gap-5 p-[14px] rounded-[16px] border border-[#24A0B5] bg-[rgba(3,30,33,0.10)] backdrop-blur-[2px] m-auto top-5 left-5">
+                  <div className="flex flex-col text-center">
+                    <h1
+                      className="text-[34px] font-normal leading-[34px] font-roadRage text-white"
+                      id="ticket-image"
+                    >
+                      Techember Fest ”25
+                    </h1>
+                    <div className="p-1 flex flex-col gap-1 max-w-[175px] w-full mx-auto text-[10px] font-roboto font-normal leading-[15px] text-white">
+                      <p>📍 04 Rumens road, Ikoyi, Lagos</p>
+                      <p>📅 March 15, 2025 | 7:00 PM</p>
+                    </div>
+                  </div>
+
+                  <div className="flex self-center">
+                    <Image
+                      src={storedFormData.avatar || "/api/placeholder/140/140"}
+                      width={140}
+                      height={140}
+                      alt="Ticket avatar"
+                      style={{ objectFit: "cover" }}
+                      className="w-[140px] h-[140px] rounded-xl border-4 border-[#24A0B5]/50"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 p-1 rounded-lg border border-[#133D44] bg-[#08343C] max-h-[160px]">
+                    <div className="flex flex-col gap-1 p-1 border-r border-b border-[#12464E] h-[45px]overflow-hidden">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
+                        Enter your name
+                      </p>
+                      <p className="text-xs font-bold leading-[18px] font-roboto text-white">
+                        {storedFormData.name}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1 pl-3 pr-1 py-1 border-b border-[#12464E] h-[45px] overflow-hidden">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
+                        Enter your email *
+                      </p>
+                      <p className="text-xs font-bold leading-[18px] font-roboto text-white">
+                        {storedFormData.email}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1 p-1 border-r border-b border-[#12464E] h-[45px] overflow-hidden">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
+                        Ticket Type:
+                      </p>
+                      <p className="text-xs font-normal leading-[18px] font-roboto text-white">
+                        {
+                          ticketTypesData[storedTicketData.selectedTypeIndex]
+                            .type
+                        }
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1 pl-3 pr-1 py-1 border-b border-[#12464E] h-[45px] overflow-hidden">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
+                        Ticket for :
+                      </p>
+                      <p className="text-xs font-normal leading-[18px] font-roboto text-white">
+                        {storedTicketData.selectedTicketNumber}
+                      </p>
+                    </div>
+
+                    <div className="col-span-2 p-2 flex flex-col gap-1 max-w-[208px] h-[65px] w-full overflow-hidden">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
+                        Special request?
+                      </p>
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white line-clamp-2">
+                        {storedFormData.request}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-5 left-7">
+                  <Image
+                    width={241}
+                    height={74}
+                    src={Barcode}
+                    alt="Barcode"
+                    className="relative w-[241px] h-[74px]"
+                    priority
+                  />
+                </div>
               </div>
-
-              <div className="grid grid-cols-2 p-1 rounded-lg border border-[#133D44] bg-[#08343C]">
-                <div className="flex flex-col gap-1 p-1 border-r border-b border-[#12464E]">
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
-                    Enter your name
-                  </p>
-                  <p className="text-xs font-bold leading-[18px] font-roboto text-white">
-                    Avi Chukwu
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-1 pl-3 pr-1 py-1 border-b border-[#12464E]">
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
-                    Enter your email *
-                  </p>
-                  <p className="text-xs font-bold leading-[18px] font-roboto text-white">
-                    User@email.com
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-1 p-1 border-r border-b border-[#12464E]">
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
-                    Ticket Type:
-                  </p>
-                  <p className="text-xs font-normal leading-[18px] font-roboto text-white">
-                    VIP
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-1 pl-3 pr-1 py-1 border-b border-[#12464E]">
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
-                    Ticket for :
-                  </p>
-                  <p className="text-xs font-normal leading-[18px] font-roboto text-white">
-                    1
-                  </p>
-                </div>
-
-                <div className="col-span-2 p-2 flex flex-col gap-1">
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
-                    Special request?
-                  </p>
-                  <p className="text-[10px] font-normal leading-[15px] font-roboto text-white">
-                    Nil ? Or the users sad story they write in there gets this
-                    whole space, Max of three rows
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute bottom-5 left-7">
-              <Image
-                width={241}
-                height={74}
-                src={Barcode}
-                alt="Barcode"
-                className="relative w-[241px] h-[74px]"
-                priority
-              />
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="py-8 flex flex-col gap-4 text-center">
+            <h1
+              className="text-white font-normal text-[32px] font-alatsi"
+              aria-label="Incomplete Data"
+            >
+              Fill the form to get your ticket
+            </h1>
+            <button
+              onClick={() => router.push("/details")}
+              className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
+              aria-label="Go to Form"
+            >
+              Go to Form
+            </button>
+          </div>
+        )}
 
         <div className="flex gap-6 mt-6">
           <button

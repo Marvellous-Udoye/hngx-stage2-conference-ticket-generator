@@ -3,15 +3,14 @@
 import { ticketTypesData } from "@/components/Tickets/Tickets";
 import TicketType from "@/components/Tickets/TicketType";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useTicketContext } from "../components/Context/TicketContext";
 
 export default function Home() {
-  const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
-  const [selectedTicketNumber, setSelectedTicketNumber] = useState(1);
+  const { ticketData, setTicketData } = useTicketContext();
   const router = useRouter();
 
   useEffect(() => {
-    // Retrieve selected ticket type and number from local storage
     const storedType = localStorage.getItem("selectedTicketType");
     const storedNumber = localStorage.getItem("selectedTicketNumber");
 
@@ -20,17 +19,20 @@ export default function Home() {
         (ticket) => ticket.type === storedType
       );
       if (index !== -1) {
-        setSelectedTypeIndex(index);
+        setTicketData((prev) => ({ ...prev, selectedTypeIndex: index }));
       }
     }
 
     if (storedNumber) {
-      setSelectedTicketNumber(parseInt(storedNumber, 10));
+      setTicketData((prev) => ({
+        ...prev,
+        selectedTicketNumber: parseInt(storedNumber, 10),
+      }));
     }
-  }, []);
+  }, [setTicketData]);
 
   const handleTicketTypeClick = (index: number) => {
-    setSelectedTypeIndex(index);
+    setTicketData((prev) => ({ ...prev, selectedTypeIndex: index }));
     localStorage.setItem("selectedTicketType", ticketTypesData[index].type);
   };
 
@@ -38,7 +40,7 @@ export default function Home() {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const number = parseInt(event.target.value, 10);
-    setSelectedTicketNumber(number);
+    setTicketData((prev) => ({ ...prev, selectedTicketNumber: number }));
     localStorage.setItem("selectedTicketNumber", number.toString());
   };
 
@@ -92,7 +94,7 @@ export default function Home() {
                   type={ticketType.type}
                   numberLeft={ticketType.numberLeft}
                   price={ticketType.price}
-                  isSelected={index === selectedTypeIndex}
+                  isSelected={index === ticketData.selectedTypeIndex}
                   onClick={() => handleTicketTypeClick(index)}
                 />
               ))}
@@ -116,7 +118,7 @@ export default function Home() {
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "20px",
               }}
-              value={selectedTicketNumber}
+              value={ticketData.selectedTicketNumber}
               onChange={handleTicketNumberChange}
               aria-label="Select number of tickets"
             >
