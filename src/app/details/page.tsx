@@ -9,7 +9,7 @@ import EnvelopeIcon from "../../../public/images/envelope.svg";
 interface FormProps {
   name: string;
   email: string;
-  about: string;
+  request: string;
   avatar: string;
 }
 
@@ -27,11 +27,10 @@ export default function Details() {
   const [state, setState] = useState<FormProps>({
     name: "",
     email: "",
-    about: "",
+    request: "",
     avatar: "",
   });
 
-  // Load saved state from localStorage
   useEffect(() => {
     try {
       const savedState = localStorage.getItem("formState");
@@ -47,7 +46,6 @@ export default function Details() {
     }
   }, []);
 
-  // Save state to localStorage
   useEffect(() => {
     try {
       localStorage.setItem("formState", JSON.stringify(state));
@@ -69,8 +67,8 @@ export default function Details() {
       newErrors.email = "Invalid email format";
     }
 
-    if (!state.about.trim()) {
-      newErrors.about = "About the project is required";
+    if (!state.request.trim()) {
+      newErrors.request = "Specific request is required";
     }
 
     if (!previewUrl) {
@@ -85,10 +83,8 @@ export default function Details() {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    // Reset previous errors
     setErrors((prev) => ({ ...prev, avatar: undefined }));
 
-    // Validate file type
     if (!selectedFile.type.startsWith("image/")) {
       setErrors((prev) => ({
         ...prev,
@@ -97,7 +93,6 @@ export default function Details() {
       return;
     }
 
-    // Validate file size
     if (selectedFile.size > MAX_FILE_SIZE) {
       setErrors((prev) => ({
         ...prev,
@@ -106,7 +101,6 @@ export default function Details() {
       return;
     }
 
-    // Create preview
     const localPreviewUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(localPreviewUrl);
     setFile(selectedFile);
@@ -151,10 +145,9 @@ export default function Details() {
           setIsUploading(true);
           const cloudinaryUrl = await uploadToCloudinary(file);
           setState((prev) => ({ ...prev, avatar: cloudinaryUrl }));
-          setPreviewUrl(cloudinaryUrl); // Update preview URL with uploaded image
+          setPreviewUrl(cloudinaryUrl);
         }
 
-        // Clear localStorage after successful submission
         localStorage.removeItem("formState");
         router.push("/checkout");
       } catch (error) {
@@ -182,7 +175,10 @@ export default function Details() {
       <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23]">
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
-            <h1 className="text-[32px] font-normal text-white jeju">
+            <h1
+              className="text-[32px] font-normal text-white jeju"
+              aria-label="Checkout Step 2 of 3"
+            >
               Attendee Details
             </h1>
             <p className="text-base font-normal leading-6 text-foreground font-roboto">
@@ -211,7 +207,6 @@ export default function Details() {
                 className="hidden"
                 id="fileInput"
                 disabled={isUploading}
-                aria-describedby="avatar-error"
                 aria-label="Upload Profile Photo"
                 data-testid="file-input"
               />
@@ -282,9 +277,7 @@ export default function Details() {
                 onChange={handleChange}
                 className="w-full bg-transparent p-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
                 placeholder=""
-                aria-required="true"
-                aria-invalid={!!errors.name}
-                aria-describedby="name-error"
+                aria-label="Enter your name"
                 data-testid="name-input"
               />
               {errors.name && (
@@ -321,9 +314,7 @@ export default function Details() {
                   onChange={handleChange}
                   placeholder="hello@avioflagos.io"
                   className="w-full bg-transparent py-3 pl-11 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-white"
-                  aria-required="true"
-                  aria-invalid={!!errors.email}
-                  aria-describedby="email-error"
+                  aria-label="Enter your email"
                   data-testid="email-input"
                 />
                 {errors.email && (
@@ -340,31 +331,28 @@ export default function Details() {
 
             <div className="flex flex-col gap-2 relative">
               <label
-                htmlFor="about"
+                htmlFor="request"
                 className="font-roboto text-base font-normal leading-6 text-foreground"
               >
                 Special request?
               </label>
               <textarea
-                id="about"
-                name="about"
-                value={state.about}
+                id="request"
+                name="request"
+                value={state.request}
                 onChange={handleChange}
                 placeholder="Textarea"
                 className="bg-transparent p-3 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground min-h-[127px]"
-                aria-required="true"
-                aria-invalid={!!errors.about}
-                aria-describedby="about-error"
-                aria-label="About the project"
-                data-testid="about-textarea"
+                aria-label="Special request"
+                data-testid="request-textarea"
               ></textarea>
-              {errors.about && (
+              {errors.request && (
                 <span
-                  id="about-error"
+                  id="request-error"
                   className="absolute right-3 top-14 transform -translate-y-1/2 text-sm text-red-500 tracking-wide"
                   role="alert"
                 >
-                  {errors.about}
+                  {errors.request}
                 </span>
               )}
             </div>

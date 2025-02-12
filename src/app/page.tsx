@@ -47,7 +47,10 @@ export default function Home() {
       <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23] ">
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
-            <h1 className="text-[32px] font-normal leading-normal text-white jeju">
+            <h1
+              className="text-[32px] font-normal leading-normal text-white jeju"
+              aria-label="Checkout Step 1 of 3"
+            >
               Ticket Selection
             </h1>
             <p className="text-base font-normal leading-6 text-foreground font-roboto">
@@ -115,6 +118,7 @@ export default function Home() {
               }}
               value={selectedTicketNumber}
               onChange={handleTicketNumberChange}
+              aria-label="Select number of tickets"
             >
               {[...Array(9)].map((_, i) => (
                 <option
