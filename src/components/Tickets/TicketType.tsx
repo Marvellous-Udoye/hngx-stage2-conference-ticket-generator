@@ -15,24 +15,24 @@ const TicketType = ({
 }: TicketTypeProps) => {
   return (
     <button
-      className={`flex gap-3 p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
+      className={`flex flex-col gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer w-full max-h-[110px] ${
         isSelected
           ? "bg-[#197686] border-[#197686]"
           : "bg-transparent border-[#2BA4B9]"
       } hover:bg-[#197686] hover:border-[#197686]`}
       onClick={onClick}
     >
-      <div className="text-foreground w-full">
-        <h2 className="uppercase font-roboto text-base font-normal leading-6 mb-1">
+      <h1 className="font-roboto text-2xl font-semibold leading-[26.4px]">
+        {price}
+      </h1>
+      <div className="text-left">
+        <h2 className="font-roboto text-base font-normal leading-6 uppercase text-foreground">
           {type}
         </h2>
-        <h2 className="font-roboto text-[14px] font-normal leading-[21px]">
-          {numberLeft} left!
-        </h2>
+        <p className="text-[14px] font-normal leading-[21px] text-[#D9D9D9]">
+          {numberLeft}/52
+        </p>
       </div>
-      <span className="flex p-2 self-start h-fit min-w-20 rounded-lg border border-[#2BA4B9] bg-[#0E464F] text-[20px] font-semibold leading-[22px] justify-end">
-        {price}
-      </span>
     </button>
   );
 };

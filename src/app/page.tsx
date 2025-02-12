@@ -3,18 +3,51 @@
 import { ticketTypesData } from "@/components/Tickets/Tickets";
 import TicketType from "@/components/Tickets/TicketType";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
+  const [selectedTicketNumber, setSelectedTicketNumber] = useState(1);
   const router = useRouter();
 
+  useEffect(() => {
+    // Retrieve selected ticket type and number from local storage
+    const storedType = localStorage.getItem("selectedTicketType");
+    const storedNumber = localStorage.getItem("selectedTicketNumber");
+
+    if (storedType) {
+      const index = ticketTypesData.findIndex(
+        (ticket) => ticket.type === storedType
+      );
+      if (index !== -1) {
+        setSelectedTypeIndex(index);
+      }
+    }
+
+    if (storedNumber) {
+      setSelectedTicketNumber(parseInt(storedNumber, 10));
+    }
+  }, []);
+
+  const handleTicketTypeClick = (index: number) => {
+    setSelectedTypeIndex(index);
+    localStorage.setItem("selectedTicketType", ticketTypesData[index].type);
+  };
+
+  const handleTicketNumberChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const number = parseInt(event.target.value, 10);
+    setSelectedTicketNumber(number);
+    localStorage.setItem("selectedTicketNumber", number.toString());
+  };
+
   return (
-    <main className="max-xl:px-5 pb-12 md:pb-24 ">
+    <main className="max-xl:px-5 pb-12 md:pb-28 ">
       <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23] ">
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
-            <h1 className="text-[32px] font-normal text-white jeju">
+            <h1 className="text-[32px] font-normal leading-normal text-white jeju">
               Ticket Selection
             </h1>
             <p className="text-base font-normal leading-6 text-foreground font-roboto">
@@ -23,7 +56,7 @@ export default function Home() {
           </div>
 
           <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
-            <div className="w-1/2 h-1 rounded-[5px] bg-[#24A0B5]"></div>
+            <div className="w-[39%] h-1 rounded-[5px] bg-[#24A0B5]"></div>
           </div>
         </div>
 
@@ -49,17 +82,16 @@ export default function Home() {
             <h3 className="gap-4 font-roboto text-base font-normal leading-6 mb-2">
               Select Ticket Type:
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-2xl border border-[#07373F] bg-[#052228]">
+            <div className="flex gap-5 p-4 rounded-2xl border border-[#07373F] bg-[#052228]">
               {ticketTypesData.map((ticketType, index) => (
-                <div key={index}>
-                  <TicketType
-                    type={ticketType.type}
-                    numberLeft={ticketType.numberLeft}
-                    price={ticketType.price}
-                    isSelected={index === selectedTypeIndex}
-                    onClick={() => setSelectedTypeIndex(index)}
-                  />
-                </div>
+                <TicketType
+                  key={index}
+                  type={ticketType.type}
+                  numberLeft={ticketType.numberLeft}
+                  price={ticketType.price}
+                  isSelected={index === selectedTypeIndex}
+                  onClick={() => handleTicketTypeClick(index)}
+                />
               ))}
             </div>
           </div>
@@ -76,45 +108,29 @@ export default function Home() {
               id="select"
               className="text-white font-roboto text-base font-normal leading-6 rounded-xl border border-[#07373F] flex items-center gap-2 p-3 w-full bg-transparent appearance-none"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' d='M0 0h20v20H0z'/%3E%3Cpath fill='%23FFFFFF' d='M5.5 7l4.5 4.5L14.5 7'/%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M16.293 8.29309L12 12.5861L7.70697 8.29309L6.29297 9.70709L12 15.4141L17.707 9.70709L16.293 8.29309Z' fill='white'/%3E%3C/svg%3E")`,
                 backgroundPosition: "right 12px center",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "20px",
               }}
+              value={selectedTicketNumber}
+              onChange={handleTicketNumberChange}
             >
-              <option value="1" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                1
-              </option>
-              <option value="2" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                2
-              </option>
-              <option value="3" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                3
-              </option>
-              <option value="4" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                4
-              </option>
-              <option value="5" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                5
-              </option>
-              <option value="6" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                6
-              </option>
-              <option value="7" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                7
-              </option>
-              <option value="8" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                8
-              </option>
-              <option value="9" className="bg-[#0E464F] hover:bg-[#24A0B5]">
-                9
-              </option>
+              {[...Array(9)].map((_, i) => (
+                <option
+                  key={i}
+                  value={i + 1}
+                  className="bg-[#0E464F] hover:bg-[#24A0B5]"
+                >
+                  {i + 1}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="bg-[#041E23] border border-[#0E464F] flex gap-8 md:px-12 justify-between rounded-3xl">
             <button
-              onClick={window.location.reload}
+              onClick={() => router.refresh()}
               className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
             >
               Cancel

@@ -18,7 +18,7 @@ const menus: MenuItem[] = [
 export default function Navbar() {
   return (
     <nav 
-      className="max-xl:px-8 pb-[28px] pd:mb-[46px] pt-4 pd:mt-6"
+      className="max-xl:px-8 pb-10 pt-5"
       role="navigation"
       aria-label="Main navigation"
     >

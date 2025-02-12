@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <main className="max-xl:px-5 pb-12 md:pb-24 ">
+    <main className="max-xl:px-5 pb-12 md:pb-28 ">
       <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23] ">
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
