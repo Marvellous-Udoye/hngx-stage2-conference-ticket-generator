@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import HugeIcons from "../../../public/images/hugeicons_ticket-01.svg";
 import Ticx from "../../../public/images/ticz.svg";
 
@@ -16,19 +19,31 @@ const menus: MenuItem[] = [
 ];
 
 export default function Navbar() {
+  const location = usePathname();
+
+  const isActive = (href: string) => {
+    if (
+      href === "/" &&
+      (location === "/" || location === "/details" || location === "/checkout")
+    ) {
+      return true;
+    }
+    return location === href;
+  };
+
   return (
-    <nav 
+    <nav
       className="max-xl:px-8 pb-10 pt-5"
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="max-w-[1200px] w-full mx-auto px-4 py-3 flex items-center justify-between rounded-3xl border border-[#197686] bg-[rgba(5,37,44,0.40)] backdrop-blur-[2px]">
-        <Link 
+        <Link
           href="/"
           className="flex gap-2 items-center p-1.5 rounded-xl border-[#0E464F]"
           aria-label="Ticz Home"
         >
-          <div 
+          <div
             className="p-1.5 border border-[#0E464F] rounded-xl bg-[#052F35]"
             aria-hidden="true"
           >
@@ -49,24 +64,23 @@ export default function Navbar() {
           />
         </Link>
 
-        <ul 
+        <ul
           className="flex items-center gap-4 max-md:hidden"
           role="menubar"
           aria-label="Main menu"
         >
           {menus.map((menu, index) => (
-            <li
-              key={index}
-              role="none"
-            >
+            <li key={index} role="none">
               <Link
                 href={menu.href}
                 className={`p-2.5 font-normal text-[18px] ${
-                  menu.isActive ? "text-white" : "text-[#B3B3B3]"
+                  isActive(menu.href) ? "text-white" : "text-[#B3B3B3]"
                 } cursor-pointer jeju hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-[#197686] rounded-lg transition-colors`}
                 role="menuitem"
-                aria-current={menu.isActive ? "page" : undefined}
-                data-testid={`nav-${menu.label.toLowerCase().replace(" ", "-")}`}
+                aria-current={isActive(menu.href) ? "page" : undefined}
+                data-testid={`nav-${menu.label
+                  .toLowerCase()
+                  .replace(" ", "-")}`}
               >
                 {menu.label}
               </Link>

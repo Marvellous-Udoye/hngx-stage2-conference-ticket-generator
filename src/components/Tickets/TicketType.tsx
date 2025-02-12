@@ -17,9 +17,9 @@ const TicketType = ({
     <button
       className={`flex flex-col gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer w-full max-h-[110px] ${
         isSelected
-          ? "bg-[#197686] border-[#197686]"
+          ? "bg-[#12464E] border-[#197686]"
           : "bg-transparent border-[#2BA4B9]"
-      } hover:bg-[#197686] hover:border-[#197686]`}
+      } hover:bg-[#2C545B] hover:border-[#197686]`}
       onClick={onClick}
     >
       <h1 className="font-roboto text-2xl font-semibold leading-[26.4px]">
