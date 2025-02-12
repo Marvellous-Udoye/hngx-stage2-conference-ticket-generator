@@ -32,14 +32,18 @@ export default function Checkout() {
 
         <div className="py-8 px-[21px] flex items-center justify-center"></div>
 
-        <div className="bg-[#041E23] border border-[#0E464F] flex gap-8 md:px-12 justify-between rounded-3xl mt-6">
+        <div className="flex gap-6">
           <button
             onClick={() => router.push("/")}
             className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
+            data-testid="back-button"
           >
             Book Another Ticket
           </button>
-          <button className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju">
+          <button
+            className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
+            data-testid="submit-button"
+          >
             Download Ticket
           </button>
         </div>

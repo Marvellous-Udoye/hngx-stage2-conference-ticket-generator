@@ -369,7 +369,7 @@ export default function Details() {
               )}
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-6">
               <button
                 type="button"
                 onClick={() => router.push("/")}

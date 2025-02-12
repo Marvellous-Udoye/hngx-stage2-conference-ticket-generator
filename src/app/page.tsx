@@ -128,16 +128,18 @@ export default function Home() {
             </select>
           </div>
 
-          <div className="bg-[#041E23] border border-[#0E464F] flex gap-8 md:px-12 justify-between rounded-3xl">
+          <div className="flex gap-6">
             <button
               onClick={() => router.refresh()}
               className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
+              data-testid="back-button"
             >
               Cancel
             </button>
             <button
               onClick={() => router.push("/details")}
               className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
+              data-testid="submit-button"
             >
               Next
             </button>
