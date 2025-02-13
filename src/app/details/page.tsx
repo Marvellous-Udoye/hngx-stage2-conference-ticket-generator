@@ -241,7 +241,7 @@ export default function Details() {
             {errors.avatar && (
               <span
                 id="avatar-error"
-                className="text-sm text-red-500 tracking-wide"
+                className="text-xs md:text-sm text-red-500 tracking-wide"
                 role="alert"
               >
                 {errors.avatar}
@@ -255,7 +255,7 @@ export default function Details() {
             <div className="flex flex-col gap-2 relative">
               <label
                 htmlFor="name"
-                className="font-roboto text-base font-normal leading-6 text-foregrouFnd"
+                className="font-roboto text-base font-normal leading-6 text-foreground"
               >
                 Enter your name
               </label>
@@ -273,7 +273,7 @@ export default function Details() {
               {errors.name && (
                 <span
                   id="name-error"
-                  className="absolute right-3 top-2/3 transform -translate-y-1/2 text-sm text-red-500 tracking-wide"
+                  className="md:absolute md:right-3 md:top-2/3 md:transform md:-translate-y-1/2 text-red-500 tracking-wide md:text-sm text-xs mt-[2px] md:mt-0"
                   role="alert"
                 >
                   {errors.name}
@@ -310,7 +310,7 @@ export default function Details() {
                 {errors.email && (
                   <span
                     id="email-error"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-red-500 tracking-wide"
+                    className="md:absolute md:right-3 md:top-1/2 md:transform md:-translate-y-1/2 text-red-500 tracking-wide md:text-sm text-xs mt-[2px] md:mt-0"
                     role="alert"
                   >
                     {errors.email}
@@ -339,7 +339,7 @@ export default function Details() {
               {errors.request && (
                 <span
                   id="request-error"
-                  className="absolute right-3 top-14 transform -translate-y-1/2 text-sm text-red-500 tracking-wide"
+                  className="md:absolute md:right-3 md:top-14 md:transform md:-translate-y-1/2 text-red-500 tracking-wide md:text-sm text-xs mt-[2px] md:mt-0"
                   role="alert"
                 >
                   {errors.request}

@@ -91,7 +91,7 @@ export default function Navbar() {
 
         <Link
           href="/my-tickets"
-          className="flex items-center gap-2 py-3 md:py-4 px-4 md:x-6 uppercase font-normal text-[12px] text-base leading-5 rounded-xl bg-white border border-[rgba(213,234,0,0.10)] text-[#0A0C11] jeju hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#197686] transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 py-3 md:py-4 px-4 md:x-6 uppercase font-normal text-[12px] sm:text-base leading-5 rounded-xl bg-white border border-[rgba(213,234,0,0.10)] text-[#0A0C11] jeju hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#197686] transition-colors"
           data-testid="nav-tickets-button"
         >
           <span>My tickets</span>
