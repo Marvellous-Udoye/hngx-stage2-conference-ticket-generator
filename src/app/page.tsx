@@ -46,11 +46,11 @@ export default function Home() {
 
   return (
     <main className="max-xl:px-5 pb-12 md:pb-28 ">
-      <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23] ">
+      <div className="max-w-[700px] w-full mx-auto p-6 md:p-12 rounded-[32px] md:rounded-[40px] border border-[#0E464F] bg-[#08252B] md:bg-[#041E23] ">
         <div className="flex flex-col gap-3 mb-8">
           <div className="flex max-md:flex-col justify-between gap-3">
             <h1
-              className="text-[32px] font-normal leading-normal text-white jeju"
+              className="text-2xl md:text-[32px] font-normal leading-normal text-white jeju"
               aria-label="Checkout Step 1 of 3"
             >
               Ticket Selection
@@ -61,22 +61,22 @@ export default function Home() {
           </div>
 
           <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
-            <div className="w-[39%] h-1 rounded-[5px] bg-[#24A0B5]"></div>
+            <div className="w-1/2 h-1 rounded-[5px] bg-[#24A0B5]"></div>
           </div>
         </div>
 
-        <div className="flex flex-col space-y-8 p-6 rounded-[32px] bg-[#08252B] border border-[#0E464F]">
-          <div className="flex flex-col items-center gap-2 p-6 rounded-2xl border-r-2 border-b-2 border-l-2 border-[#07373F] radial-gradient backdrop-blur-[7px]">
-            <h1 className="text-[62px] font-normal leading-[62px] font-roadRage text-foreground">
+        <div className="flex flex-col space-y-8 md:p-6 rounded-[32px] bg-[#08252B] md:border border-[#0E464F]">
+          <div className="flex flex-col items-center p-6 gap-2 max-md:py-4 max-md:px-6 rounded-2xl border-r-2 border-b-2 border-l-2 border-[#07373F] radial-gradient backdrop-blur-[7px]">
+            <h1 className="text-5xl text-[62px] font-normal leading-[48px] md:leading-[62px] font-roadRage text-foreground text-center">
               Techember Fest ”25
             </h1>
-            <p className="max-w-[340px] w-full text-base font-roboto font-normal leading-6 text-center text-foreground">
+            <p className="max-w-[340px] w-full text=[14px] md:text-base font-roboto font-normal leading-[21px] md:leading-6 text-center text-foreground">
               Join us for an unforgettable experience at [Event Name]! Secure
               your spot now.
             </p>
-            <div className="flex items-center gap-4 font-roboto text-base font-normal leading-6 text-foreground">
+            <div className="flex max-md:flex-col items-center gap-1 md:gap-4 font-roboto text-base font-normal leading-6 text-foreground max-md:mt-8">
               <span>📍 [Event Location]</span>
-              <span>| |</span>
+              <span className="max-md:hidden">| |</span>
               <span>March 15, 2025 | 7:00 PM</span>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function Home() {
             <h3 className="gap-4 font-roboto text-base font-normal leading-6 mb-2">
               Select Ticket Type:
             </h3>
-            <div className="flex gap-5 p-4 rounded-2xl border border-[#07373F] bg-[#052228]">
+            <div className="flex max-md:flex-col gap-5 p-4 rounded-2xl border border-[#07373F] bg-[#052228]">
               {ticketTypesData.map((ticketType, index) => (
                 <TicketType
                   key={index}
@@ -126,7 +126,7 @@ export default function Home() {
                 <option
                   key={i}
                   value={i + 1}
-                  className="bg-[#0E464F] hover:bg-[#24A0B5]"
+                  className="bg-[#0E464F] hover:bg-[#24A0B5] py-3"
                 >
                   {i + 1}
                 </option>
@@ -134,7 +134,7 @@ export default function Home() {
             </select>
           </div>
 
-          <div className="flex gap-6">
+          <div className="flex max-md:flex-col-reverse gap-4 md:gap-6">
             <button
               onClick={() => router.refresh()}
               className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"

@@ -161,11 +161,11 @@ export default function Details() {
 
   return (
     <main className="max-xl:px-5 pb-12 md:pb-24">
-      <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23]">
+      <div className="max-w-[700px] w-full mx-auto p-6 md:p-12 rounded-[32px] md:rounded-[40px] border border-[#0E464F] bg-[#041E23]">
         <div className="flex flex-col gap-3 mb-8">
-          <div className="flex max-md:flex-col justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <h1
-              className="text-[32px] font-normal text-white jeju"
+              className="text-2xl md:text-[32px] font-normal leading-normal text-white jeju"
               aria-label="Checkout Step 2 of 3"
             >
               Attendee Details
@@ -174,13 +174,14 @@ export default function Details() {
               Step 2/3
             </p>
           </div>
+
           <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
-            <div className="w-[57%] h-1 rounded-[5px] bg-[#24A0B5]"></div>
+            <div className="w-3/4 h-1 rounded-[5px] bg-[#24A0B5]"></div>
           </div>
         </div>
 
-        <div className="flex flex-col space-y-8 p-6 rounded-[32px] bg-[#08252B] border border-[#0E464F]">
-          <div className="flex flex-col gap-8 p-6 rounded-2xl border border-[#07373F] bg-[#052228]">
+        <div className="flex flex-col space-y-8 md:p-6 rounded-[32px] md:bg-[#08252B] md:border border-[#0E464F]">
+          <div className="flex flex-col gap-3 md:gap-8 p-6 rounded-2xl border border-[#07373F] bg-[#052228]">
             <label
               htmlFor="fileInput"
               className="font-roboto text-base font-normal leading-6 text-foreground"
@@ -254,7 +255,7 @@ export default function Details() {
             <div className="flex flex-col gap-2 relative">
               <label
                 htmlFor="name"
-                className="font-roboto text-base font-normal leading-6 text-foreground"
+                className="font-roboto text-base font-normal leading-6 text-foregrouFnd"
               >
                 Enter your name
               </label>
@@ -346,7 +347,7 @@ export default function Details() {
               )}
             </div>
 
-            <div className="flex gap-6">
+            <div className="flex max-md:flex-col-reverse gap-4 md:gap-6">
               <button
                 type="button"
                 onClick={() => router.push("/")}

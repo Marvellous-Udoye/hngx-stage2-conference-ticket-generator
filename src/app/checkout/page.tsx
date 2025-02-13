@@ -43,11 +43,11 @@ export default function Checkout() {
 
   return (
     <main className="max-xl:px-5 pb-12 md:pb-28" role="main">
-      <div className="max-w-[700px] w-full mx-auto p-12 rounded-[40px] border border-[#0E464F] bg-[#041E23]">
-        <div className="flex flex-col gap-3 mb-8">
-          <div className="flex max-md:flex-col justify-between gap-3">
+      <div className="max-w-[700px] w-full mx-auto p-6 md:p-12 rounded-[32px] md:rounded-[40px] border border-[#0E464F] bg-[#041E23]">
+        <div className="flex flex-col gap-3 md:mb-8">
+          <div className="flex items-center justify-between gap-3">
             <h1
-              className="text-[32px] font-normal text-white jeju"
+              className="text-2xl md:text-[32px] font-normal leading-normal text-white jeju"
               aria-label="Checkout Step 3 of 3"
             >
               Ready
@@ -58,23 +58,28 @@ export default function Checkout() {
           </div>
 
           <div className="h-1 w-full rounded-[5px] bg-[#0E464F]">
-            <div className="w-[39%] h-1 rounded-[5px] bg-[#24A0B5]"></div>
+            <div className="w-full h-1 rounded-[5px] bg-[#24A0B5]"></div>
           </div>
         </div>
 
         {isDataComplete ? (
-          <div className="pt-8 flex flex-col gap-4">
+          <div className="pt-8 flex flex-col gap-3 md:gap-4">
             <h1
-              className="text-white font-normal text-[32px] font-alatsi text-center"
+              className="text-white text-bold md:font-normal text-[24px] md:text-[32px] max-md:leading-[33.6px] font-roboto md:font-alatsi text-center"
               aria-label="Ticket Booking Confirmation"
             >
               Your Ticket is Booked!
             </h1>
             <p className="text-base font-normal leading-6 text-foreground font-roboto text-center">
-              Check your email for a copy or you can <strong>download</strong>
+              <span className="max-md:hidden">
+                Check your email for a copy or you can <strong>download</strong>
+              </span>
+              <span className="md:hidden">
+                You can download or Check your email for a copy
+              </span>
             </p>
 
-            <div className="py-8 px-[21px] flex items-center justify-center">
+            <div className="py-8 md:px-[21px] flex items-center justify-center">
               <div className="relative" aria-labelledby="ticket-image">
                 <Image
                   width={300}
@@ -85,7 +90,7 @@ export default function Checkout() {
                   priority
                 />
 
-                <div className="absolute max-w-[260px] w-full max-h-[446px] flex flex-col gap-5 p-[14px] rounded-[16px] border border-[#24A0B5] bg-[rgba(3,30,33,0.10)] backdrop-blur-[2px] m-auto top-5 left-5">
+                <div className="absolute sm:max-w-[260px] w-full max-h-[446px] flex flex-col gap-5 p-[14px] rounded-[16px] border border-[#24A0B5] bg-[rgba(3,30,33,0.10)] backdrop-blur-[2px] m-auto top-5 max-sm:max-w-[95%] left-2 sm:left-5 transform max-sm:scale-x-[95%]">
                   <div className="flex flex-col text-center">
                     <h1
                       className="text-[34px] font-normal leading-[34px] font-roadRage text-white"
@@ -161,7 +166,7 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                <div className="absolute bottom-5 left-7">
+                <div className="absolute transform max-sm:max-w-[60%] bottom-5 left-[52px] sm:left-8">
                   <Image
                     width={241}
                     height={74}
@@ -192,7 +197,7 @@ export default function Checkout() {
           </div>
         )}
 
-        <div className="flex gap-6 mt-6">
+        <div className="flex max-md:flex-col-reverse gap-4 md:gap-6 mt-6">
           <button
             onClick={() => router.push("/")}
             className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
