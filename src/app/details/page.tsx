@@ -198,7 +198,6 @@ export default function Details() {
                 id="fileInput"
                 disabled={isUploading}
                 aria-label="Upload Profile Photo"
-                data-testid="file-input"
               />
               <label
                 htmlFor="fileInput"
@@ -268,7 +267,6 @@ export default function Details() {
                 className="w-full bg-transparent p-3 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground"
                 placeholder=""
                 aria-label="Enter your name"
-                data-testid="name-input"
               />
               {errors.name && (
                 <span
@@ -305,7 +303,6 @@ export default function Details() {
                   placeholder="hello@avioflagos.io"
                   className="w-full bg-transparent py-3 pl-11 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-white"
                   aria-label="Enter your email"
-                  data-testid="email-input"
                 />
                 {errors.email && (
                   <span
@@ -334,7 +331,6 @@ export default function Details() {
                 placeholder="Textarea"
                 className="bg-transparent p-3 pr-12 rounded-xl border border-[#07373F] font-roboto text-base font-normal leading-6 text-foreground min-h-[127px]"
                 aria-label="Special request"
-                data-testid="request-textarea"
               ></textarea>
               {errors.request && (
                 <span
@@ -352,14 +348,12 @@ export default function Details() {
                 type="button"
                 onClick={() => router.push("/")}
                 className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
-                data-testid="back-button"
               >
                 Back
               </button>
               <button
                 type="submit"
                 className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
-                data-testid="submit-button"
               >
                 Get My Free Ticket
               </button>

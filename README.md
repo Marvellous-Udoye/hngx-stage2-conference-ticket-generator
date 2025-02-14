@@ -1,44 +1,49 @@
-# Conference Ticket Generator 🎟️
+# 🎟️ Conference Ticket Generator  
 
-## 📌 Overview
-This project is a **Conference Ticket Generator** built with React. It allows users to fill out a form with their details, validates their input, and generates a personalized conference ticket upon successful submission.
+## 📌 Overview  
+The **Conference Ticket Generator** is a web application that allows users to create a personalized conference ticket. Users fill out a form with their details, upload an avatar, and generate a unique ticket upon successful validation.  
 
-## 🚀 Features
+🔗 **Live Demo**: [View Project](https://conference-ticket-generator-delta.vercel.app/)  
+🎨 **Figma Design**: [View Design](https://www.figma.com/community/file/1470800949188681164/event-ticket-booking-ui-open-source-practice-project)  
 
-### 📝 Form Elements
-- **Full Name**: Text input for user's name.
-- **Email Address**: Email input field with validation.
-- **Avatar Upload**: Users can upload their avatar using a Cloudinary URL or any image link.
-- **Submit Button**: Validates input and generates the ticket.
+## 🚀 Features  
 
-### ✅ Form Validation
-- All required fields must be filled before submission.
-- The email must be in a valid format.
-- The avatar must be a valid external image URL.
-- Clear error messages are displayed if validation fails.
+### 📝 Form Elements  
+- **Full Name**: Text input field for user's name.  
+- **Email Address**: Email input with built-in validation.  
+- **Avatar Upload**: Users can upload their avatar via an external image URL (Cloudinary or any valid link).  
+- **Submit Button**: Ensures all input fields are valid before generating a ticket.  
 
-### 💾 State Persistence
-- User inputs persist using **IndexedDB or local storage** to prevent data loss on page refresh.
+### ✅ Form Validation  
+- All required fields must be completed before submission.  
+- The email must follow a valid format.  
+- The avatar must be a valid external image URL.  
+- User-friendly error messages guide users through correction.  
 
-### 🎟️ Ticket Generation
-- After successful form submission, a ticket is generated with:
-  - Full Name
-  - Email Address
-  - Avatar Image (from the provided URL)
-- The ticket appears only when all validations pass.
+### 🎟️ Ticket Generation  
+Once the form is successfully submitted, a personalized ticket is generated, displaying:  
+- **Full Name**  
+- **Email Address**  
+- **Uploaded Avatar**  
 
-### ♿ Accessibility
-- Screen-reader friendly form elements, hints, and error messages.
-- Keyboard navigable with proper focus states.
-- Users can complete and submit the form entirely using the keyboard.
+The ticket appears only when all validations pass.  
 
-### 📱 Responsive Design
-- The form and ticket layout seamlessly adjust across different screen sizes.
-- Optimized for mobile, tablet, and desktop views.
+### 💾 Data Persistence  
+- User inputs are saved using **IndexedDB** or **local storage**, preventing data loss on page refresh.  
 
-## 🛠️ Tech Stack
-- **React** (or Next.js)
-- **CSS/Tailwind CSS** for styling
-- **IndexedDB/Local Storage** for data persistence
-- **Cloudinary** for avatar uploads
-- **React Testing Library** for testing
+### ♿ Accessibility  
+- Fully accessible with **screen-reader support**.  
+- Proper focus management and keyboard navigation for a smooth user experience.  
+- Semantic HTML ensures usability for all users.  
+
+### 📱 Responsive Design  
+- Adaptive layout for **mobile, tablet, and desktop**.  
+- Optimized for various screen sizes.  
+
+## 🛠️ Tech Stack  
+This project was built using modern web technologies:  
+- **Next.js** – For server-side rendering and routing.  
+- **TypeScript** – Ensuring type safety and scalability.  
+- **Tailwind CSS** – For a sleek and customizable UI.  
+- **IndexedDB/Local Storage** – For storing user data persistently.  
+- **Cloudinary** – For handling avatar uploads.  

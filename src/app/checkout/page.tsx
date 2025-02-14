@@ -201,14 +201,12 @@ export default function Checkout() {
           <button
             onClick={() => router.push("/")}
             className="py-3 px-6 rounded-lg font-normal text-base text-[#24A0B5] leading-6 border border-[#24A0B5] bg-[#041E23] w-full jeju"
-            data-testid="back-button"
             aria-label="Book Another Ticket"
           >
             Book Another Ticket
           </button>
           <button
             className="py-3 px-6 rounded-lg font-normal text-base text-white leading-6 border border-[#24A0B5] bg-[#24A0B5] w-full jeju"
-            data-testid="submit-button"
             aria-label="Download Ticket"
           >
             Download Ticket
