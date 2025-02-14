@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Conference Ticket Generator 🎟️
 
-## Getting Started
+## 📌 Overview
+This project is a **Conference Ticket Generator** built with React. It allows users to fill out a form with their details, validates their input, and generates a personalized conference ticket upon successful submission.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 📝 Form Elements
+- **Full Name**: Text input for user's name.
+- **Email Address**: Email input field with validation.
+- **Avatar Upload**: Users can upload their avatar using a Cloudinary URL or any image link.
+- **Submit Button**: Validates input and generates the ticket.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ✅ Form Validation
+- All required fields must be filled before submission.
+- The email must be in a valid format.
+- The avatar must be a valid external image URL.
+- Clear error messages are displayed if validation fails.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 💾 State Persistence
+- User inputs persist using **IndexedDB or local storage** to prevent data loss on page refresh.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🎟️ Ticket Generation
+- After successful form submission, a ticket is generated with:
+  - Full Name
+  - Email Address
+  - Avatar Image (from the provided URL)
+- The ticket appears only when all validations pass.
 
-## Learn More
+### ♿ Accessibility
+- Screen-reader friendly form elements, hints, and error messages.
+- Keyboard navigable with proper focus states.
+- Users can complete and submit the form entirely using the keyboard.
 
-To learn more about Next.js, take a look at the following resources:
+### 📱 Responsive Design
+- The form and ticket layout seamlessly adjust across different screen sizes.
+- Optimized for mobile, tablet, and desktop views.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+- **React** (or Next.js)
+- **CSS/Tailwind CSS** for styling
+- **IndexedDB/Local Storage** for data persistence
+- **Cloudinary** for avatar uploads
+- **React Testing Library** for testing
