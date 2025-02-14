@@ -6,8 +6,8 @@ export default function NotFoundPage() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#041E23] to-[#08252B]">
-      <h1 className="text-6xl font-bold text-white mb-8">
+    <div className="flex flex-col items-center justify-center h-[90vh] bg-gradient-to-b from-[#041E23] to-[#08252B]">
+      <h1 className="text-3xl md:text-6xl font-bold text-white mb-8">
         404 - Page Not Found
       </h1>
       <button
