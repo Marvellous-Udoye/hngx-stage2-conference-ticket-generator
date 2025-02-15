@@ -120,7 +120,7 @@ export default function Checkout() {
                       <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
                         Enter your name
                       </p>
-                      <p className="text-xs font-bold leading-[18px] font-roboto text-white">
+                      <p className="text-xs font-bold leading-[18px] font-roboto text-white line-clamp-1">
                         {storedFormData.name}
                       </p>
                     </div>
@@ -129,7 +129,7 @@ export default function Checkout() {
                       <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
                         Enter your email *
                       </p>
-                      <p className="text-xs font-bold leading-[18px] font-roboto text-white">
+                      <p className="text-xs font-bold leading-[18px] font-roboto text-white line-clamp-1">
                         {storedFormData.email}
                       </p>
                     </div>
@@ -138,7 +138,7 @@ export default function Checkout() {
                       <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
                         Ticket Type:
                       </p>
-                      <p className="text-xs font-normal leading-[18px] font-roboto text-white">
+                      <p className="text-xs font-normal leading-[18px] font-roboto text-white line-clamp-1">
                         {
                           ticketTypesData[storedTicketData.selectedTypeIndex]
                             .type
@@ -150,7 +150,7 @@ export default function Checkout() {
                       <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
                         Ticket for :
                       </p>
-                      <p className="text-xs font-normal leading-[18px] font-roboto text-white">
+                      <p className="text-xs font-normal leading-[18px] font-roboto text-white line-clamp-1">
                         {storedTicketData.selectedTicketNumber}
                       </p>
                     </div>
@@ -159,7 +159,7 @@ export default function Checkout() {
                       <p className="text-[10px] font-normal leading-[15px] font-roboto text-white opacity-[33%]">
                         Special request?
                       </p>
-                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white line-clamp-2">
+                      <p className="text-[10px] font-normal leading-[15px] font-roboto text-white line-clamp-1">
                         {storedFormData.request}
                       </p>
                     </div>
